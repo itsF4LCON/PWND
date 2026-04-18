@@ -1,0 +1,358 @@
+/* --- Core Reset & Palette (from xivlabs styless.css) --- */
+html { scroll-behavior: smooth; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #EDEAE2;          /* Main background beige */
+  --ink: #1A1A18;         /* Primary text black */
+  --mid: #7A7670;         /* Secondary text gray */
+  --border: rgba(26,26,24,0.12); /* Subtle borders */
+  --green: #4CAF7D;        /* Ping/Success green */
+  --amber: #d4a843;       /* Syncing/Warning amber */
+  --red: #c0392b;         /* Error red */
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif; /* Body font */
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(26,26,24,0.2); }
+
+/* Monospace text utility (for technical data) */
+.mono-text {
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+.hidden { display: none !important; }
+
+/* --- NAVIGATION (xivlabs style) --- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 52px; padding: 0 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink); text-decoration: none;
+}
+.nav-status {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--mid);
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+  animation: ping 2s ease-in-out infinite;
+}
+@keyframes ping {
+  0%,100% { box-shadow: 0 0 0 0 rgba(76,175,125,0.5); }
+  50%      { box-shadow: 0 0 0 5px rgba(76,175,125,0); }
+}
+
+/* --- BRUTALIST UI ELEMENTS --- */
+.background-label {
+  position: fixed;
+  font-size: clamp(200px, 30vw, 400px);
+  font-weight: 900;
+  color: var(--ink);
+  opacity: 0.03; /* Very transparent identifier */
+  z-index: 0;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  letter-spacing: -10px;
+}
+
+main {
+  flex: 1;
+  padding: 100px 32px 0; /* Adjust for nav */
+  position: relative;
+  z-index: 1;
+  padding-bottom: 80px;
+}
+
+/* Search Hero Section */
+.checker-hero {
+  max-width: 700px;
+  margin-bottom: 64px;
+}
+.hero-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--mid); margin-bottom: 16px;
+}
+.hero-title {
+  font-size: clamp(40px, 6vw, 80px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -2px;
+  margin-bottom: 32px;
+}
+.hero-desc {
+  font-size: 15px; line-height: 1.7;
+  color: var(--mid); max-width: 500px; font-weight: 400;
+  margin-bottom: 48px;
+}
+
+/* Minimalist Search Bar */
+.search-container {
+  display: flex; gap: 16px; align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+}
+.mono-input {
+  flex: 1;
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  background: none; border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 14px 20px;
+  transition: all 0.2s;
+}
+.mono-input:focus {
+  outline: none;
+  border-color: var(--ink);
+  background: rgba(26,26,24,0.02);
+}
+
+/* XIV Button (xivlabs project item style) */
+.xiv-button {
+  display: inline-flex; align-items: baseline; gap: 12px;
+  background: none; border: 1px solid var(--border);
+  padding: 14px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--ink); cursor: pointer;
+  transition: all 0.18s;
+  text-transform: none; /* DM Mono button text is uppercase, Inter button isn't */
+  letter-spacing: 0;
+}
+.xiv-button:hover {
+  border-color: var(--ink);
+  padding-left: 28px; /* Classic shift on hover */
+  background: rgba(26,26,24,0.03);
+}
+.button-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--mid);
+}
+.nav-arrow { font-size: 12px; color: var(--mid); transition: transform 0.2s; }
+.xiv-button:hover .nav-arrow { transform: translateX(4px); color: var(--ink); }
+
+/* Status Area (Monospace updates) */
+.status-box {
+  margin-top: 24px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  border: 1px solid var(--border);
+  font-size: 12px; color: var(--mid);
+}
+.gh-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  display: inline-block;
+}
+.gh-dot.ok { background: var(--green); }
+.gh-dot.amber { background: var(--amber); }
+.gh-dot.red { background: var(--red); }
+
+/* --- RESULTS SECTION (xivlabs activity feed style) --- */
+.results-section {
+  border-top: 1px solid var(--border);
+  padding-top: 40px;
+  margin-bottom: 100px; /* Space for the knight */
+}
+.section-header {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px; flex-wrap: wrap;
+}
+.section-title {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 800; letter-spacing: -2px; line-height: 1;
+}
+.result-summary { font-size: 14px; flex: 1; color: var(--ink); }
+.result-summary strong { font-weight: 600; }
+.section-count {
+  font-size: 12px; color: var(--mid); text-transform: uppercase;
+}
+
+/* Results Grid */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* Breach Card (xivlabs activity item style) */
+.breach-card {
+  display: flex; flex-direction: column;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  opacity: 0; /* Animated reveal */
+}
+.breach-card.reveal.vis {
+  animation: up 0.4s forwards;
+}
+
+.card-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 12px;
+}
+.breach-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; }
+.breach-date { font-size: 11px; color: var(--mid); text-transform: uppercase; }
+
+.breach-desc {
+  font-size: 14px; line-height: 1.7; color: var(--mid);
+  margin-bottom: 16px;
+  max-width: 600px;
+}
+
+.card-meta { display: flex; gap: 16px; }
+.meta-tag {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--mid);
+  padding: 4px 8px; border: 1px solid var(--border);
+}
+.meta-tag.red { color: var(--red); border-color: rgba(192,57,43,0.2); }
+
+/* --- KNIGHT EASTER EGG (from xivlabs core) --- */
+.knight {
+  position: fixed;
+  right: 0; bottom: 0;
+  width: 420px; /* Portfolio size */
+  height: auto;
+  pointer-events: none; /* Non-interactive by default */
+  opacity: 0.9;
+  filter:
+    drop-shadow(2px 0 0 black)
+    drop-shadow(-2px 0 0 black)
+    drop-shadow(0 2px 0 black)
+    drop-shadow(0 -2px 0 black);
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  animation: float 4s ease-in-out infinite;
+  z-index: 100;
+}
+
+.back-link-container {
+  margin-top: 16px;
+  display: flex;
+}
+
+.back-link-container.always-visible {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 0;
+    z-index: 100;
+    text-align: center;
+}
+
+.results-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.back-to-main {
+  font-size: 10px;
+  text-decoration: none;
+  color: var(--mid);
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-to-main:hover {
+  color: var(--ink);
+  padding-left: 8px; /* XIV Labs signature shift */
+}
+
+.back-to-main .arrow {
+  transition: transform 0.2s ease;
+}
+
+.search-mode-toggle {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.mode-btn {
+  background: none;
+  border: none;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--mid);
+  cursor: pointer;
+  padding: 5px 0;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.mode-btn.active {
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+/* Ensure the input doesn't hide text when typing passwords */
+.mono-input[type="password"] {
+  letter-spacing: 4px;
+}
+
+.back-to-main:hover .arrow {
+  transform: translateX(-4px);
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- FOOTER --- */
+footer {
+  padding: 16px 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+  z-index: 10; background: var(--bg);
+}
+.footer-copy { font-size: 11px; letter-spacing: 1px; color: var(--mid); font-family: 'DM Mono', monospace;}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 1024px) {
+  .knight { width: 280px; }
+  main { padding-right: 300px; } /* Push main content left of the knight */
+}
+
+@media (max-width: 768px) {
+  .knight { width: 160px; }
+  main { padding: 80px 20px 0; padding-right: 0; }
+  nav { padding: 0 20px; }
+  .search-container { flex-direction: column; align-items: stretch; gap: 12px;}
+  .xiv-button { justify-content: space-between; }
+  .section-header { padding-bottom: 16px; gap: 8px; }
+  .breach-card { padding: 16px 0; }
+  .card-header { flex-direction: column; gap: 4px; }
+  .card-meta { flex-direction: column; gap: 8px; align-items: flex-start;}
+}

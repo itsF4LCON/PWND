@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breach Checker — XIV Labs</title>
+<link rel="icon" type="image/png" href="XIV.png">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="breach-checker-page">
+
+<nav>
+  <a href="https://xivlabs.tech" class="nav-logo">F4LCON</a>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    Online
+  </div>
+</nav>
+
+<div class="background-label">XIV</div>
+
+<main>
+  <section class="checker-hero">
+    <div class="hero-label">Security Protocol // Branch Checker</div>
+    <h1 class="hero-title">Check your<br>Exposure.</h1>
+    <p class="hero-desc">Enter your email address below. We will scan our local archives (974 synchronized high profile breaches) for matches.</p>
+
+    <div class="search-mode-toggle mono-text">
+  <button onclick="setMode('email')" id="modeEmail" class="mode-btn active">EMAIL SCAN</button>
+  <button onclick="setMode('password')" id="modePassword" class="mode-btn">PASSWORD SCAN</button>
+</div>
+
+<div class="search-container">
+  <input type="text" id="mainInput" class="mono-input" placeholder="[ enter email ]" required>
+  <button onclick="executeScan()" class="xiv-button">
+    <span class="button-num" id="btnNum">01</span> <span id="btnText">Check Email</span> <span class="nav-arrow">↗</span>
+  </button>
+</div>
+
+    <div id="statusUpdate" class="status-box hidden">
+      <span id="statusIcon" class="gh-dot amber"></span>
+      <span id="statusMessage" class="mono-text">Awaiting input...</span>
+    </div>
+  </section>
+
+  <section id="resultsSection" class="results-section hidden">
+  <div class="results-grid" id="resultsGrid">
+    </div>
+</section>
+
+<div style="flex-grow: 1;"></div>
+
+<div class="back-link-container always-visible">
+  <a href="https://xivlabs.tech" class="back-to-main mono-text">
+    <span class="arrow">←</span> RETURN TO MAIN PAGE
+  </a>
+</div>
+
+</main>
+
+<img src="XIV.png" class="knight" alt="knight">
+
+<footer>
+  <span class="footer-copy">© 2026 XIV Labs</span>
+</footer>
+
+<script>
+  // Placeholder function for demonstration - replace with your actual fetch logic
+let currentMode = 'email';
+
+function setMode(mode) {
+  currentMode = mode;
+  const input = document.getElementById('mainInput');
+  const btnText = document.getElementById('btnText');
+  const btnNum = document.getElementById('btnNum');
+  
+  // Update UI active states
+  document.getElementById('modeEmail').classList.toggle('active', mode === 'email');
+  document.getElementById('modePassword').classList.toggle('active', mode === 'password');
+  
+  // Update Input/Button text
+  input.placeholder = mode === 'email' ? '[ enter email ]' : '[ enter password ]';
+  input.type = mode === 'email' ? 'email' : 'text'; // Using text so they see what they type, or 'password' for privacy
+  btnText.textContent = mode === 'email' ? 'Check Email' : 'Check Password';
+  btnNum.textContent = mode === 'email' ? '01' : '02';
+}
+
+async function executeScan() {
+  const value = document.getElementById('mainInput').value;
+  const statusUpdate = document.getElementById('statusUpdate'); // Get the container
+  const statusIcon = document.getElementById('statusIcon');
+  const statusMessage = document.getElementById('statusMessage');
+  const resultsSection = document.getElementById('resultsSection');
+  const resultsGrid = document.getElementById('resultsGrid');
+
+  if (!value) return;
+
+  // Reveal the status box and reset UI
+  statusUpdate.classList.remove('hidden'); 
+  resultsSection.classList.add('hidden');
+  resultsGrid.innerHTML = '';
+  statusIcon.className = 'gh-dot amber';
+  statusMessage.textContent = `Scanning local and global archives...`;
+
+  try {
+    const endpoint = currentMode === 'email' ? '/api/check-email' : '/api/check-password';
+    const response = await fetch(`https://api-breach.xivlabs.tech${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [currentMode]: value })
+    });
+
+    const data = await response.json();
+
+    if (data.pwned || (data.breaches && data.breaches.length > 0)) {
+      statusIcon.className = 'gh-dot red';
+      statusMessage.textContent = `CRITICAL EXPOSURE DETECTED.`;
+      resultsSection.classList.remove('hidden');
+
+      if (currentMode === 'password') {
+        resultsGrid.innerHTML = `
+          <div class="breach-card reveal vis">
+            <div class="card-header">
+              <span class="breach-name">GLOBAL LEAK DATABASE MATCH</span>
+            </div>
+            <p class="breach-desc">${data.message}</p>
+            <div class="card-meta">
+               <span class="meta-tag red">EXPOSURES: ${data.pwnCount.toLocaleString()}</span>
+            </div>
+          </div>
+        `;
+      } else {
+        data.breaches.forEach(b => {
+          resultsGrid.innerHTML += `
+            <div class="breach-card reveal vis">
+              <div class="card-header">
+                <span class="breach-name">${b.name}</span>
+                <span class="breach-date">${b.breachDate}</span>
+              </div>
+              <p class="breach-desc">${b.description}</p>
+            </div>
+          `;
+        });
+      }
+    } else {
+      statusIcon.className = 'gh-dot ok';
+      statusMessage.textContent = `DECRYPTION COMPLETE: 0 MATCHES FOUND.`;
+    }
+  } catch (err) {
+    console.error(err);
+    statusUpdate.classList.remove('hidden');
+    statusIcon.className = 'gh-dot red';
+    statusMessage.textContent = `SYSTEM ERROR: Unable to reach core.`;
+  }
+}
+  // Generic reveal observer (like main site)
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
