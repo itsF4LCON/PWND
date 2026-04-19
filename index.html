@@ -85,7 +85,7 @@ function setMode(mode) {
   
   // Update Input/Button text
   input.placeholder = mode === 'email' ? '[ enter email ]' : '[ enter password ]';
-  input.type = mode === 'email' ? 'email' : 'text'; // Using text so they see what they type, or 'password' for privacy
+  input.type = mode === 'email' ? 'email' : 'password'; // Using text so they see what they type, or 'password' for privacy
   btnText.textContent = mode === 'email' ? 'Check Email' : 'Check Password';
   btnNum.textContent = mode === 'email' ? '01' : '02';
 }
