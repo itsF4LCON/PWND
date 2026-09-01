@@ -70,7 +70,6 @@
 </footer>
 
 <script>
- 
 let currentMode = 'email';
 
 function setMode(mode) {
@@ -79,20 +78,18 @@ function setMode(mode) {
   const btnText = document.getElementById('btnText');
   const btnNum = document.getElementById('btnNum');
   
-
   document.getElementById('modeEmail').classList.toggle('active', mode === 'email');
   document.getElementById('modePassword').classList.toggle('active', mode === 'password');
   
- 
   input.placeholder = mode === 'email' ? '[ enter email ]' : '[ enter password ]';
-  input.type = mode === 'email' ? 'email' : 'password'; // Using text so they see what they type, or 'password' for privacy
+  input.type = mode === 'email' ? 'email' : 'password';
   btnText.textContent = mode === 'email' ? 'Check Email' : 'Check Password';
   btnNum.textContent = mode === 'email' ? '01' : '02';
 }
 
 async function executeScan() {
   const value = document.getElementById('mainInput').value;
-  const statusUpdate = document.getElementById('statusUpdate'); // Get the container
+  const statusUpdate = document.getElementById('statusUpdate');
   const statusIcon = document.getElementById('statusIcon');
   const statusMessage = document.getElementById('statusMessage');
   const resultsSection = document.getElementById('resultsSection');
